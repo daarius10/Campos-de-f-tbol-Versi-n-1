@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_2a863a0aff9e434b7e6a5eb94b472f25 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.css"/>
+</head>
+<body>
+    
+    
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+    #app-sports-panel {
+        position: absolute; top: 20px; left: 65px; z-index: 1000;
+        background: rgba(15, 23, 42, 0.9); color: #ffffff; padding: 20px;
+        border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        font-family: 'Inter', sans-serif; width: 310px; backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1); box-sizing: border-box;
+    }
+    .app-brand { font-size: 11px; font-weight: 800; color: #10b981; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+    .app-title { margin: 0 0 4px 0; font-size: 18px; font-weight: 700; }
+    .app-counter { font-size: 12px; color: #94a3b8; margin-bottom: 16px; display: block; font-weight: 500; }
+    .label-filtro { font-size: 11px; font-weight: 600; color: #94a3b8; margin-bottom: 6px; display: block; text-transform: uppercase; }
+    .input-pro { width: 100%; padding: 11px 14px; margin-bottom: 12px; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; box-sizing: border-box; font-size: 13px; background: rgba(255, 255, 255, 0.07); color: #ffffff; }
+    .select-pro { width: 100%; padding: 11px 14px; margin-bottom: 12px; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; background: #1e293b; color: #ffffff; box-sizing: border-box; font-size: 13px; cursor: pointer; }
+    .btn-gps { width: 100%; padding: 10px; background: #2563eb; color: #ffffff; border: none; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    option { background: #0f172a; color: #ffffff; }
+</style>
+
+<div id="app-sports-panel">
+    <div class="app-brand">Zaragoza Football Map</div>
+    <h2 class="app-title">Panel de Control</h2>
+    <span class="app-counter" id="contadorCampos">Cargando instalaciones...</span>
+    
+    <span class="label-filtro">🔍 Buscar Club u Oficial</span>
+    <input type="text" id="buscadorGlobal" class="input-pro" placeholder="Ej: Real Zaragoza, Ebro..." onkeyup="filtrarApp()">
+    
+    <span class="label-filtro">🛡️ Filtrar por Club</span>
+    <select id="filtroClub" class="select-pro" onchange="filtrarApp()">
+        <option value="todos">Todos los clubes oficiales</option>
+        <option value="Actur">Actur</option><option value="Amistad">Amistad</option><option value="CD Oliver">CD Oliver</option><option value="CD Ranillas">CD Ranillas</option><option value="CD Valdefierro">CD Valdefierro</option><option value="César Láinez">César Láinez</option><option value="Delicias">Delicias</option><option value="EM El Olivar">EM El Olivar</option><option value="El Gállego">El Gállego</option><option value="Enrique Escuer">Enrique Escuer</option><option value="Estadio de Fútbol La Romareda">Estadio de Fútbol La Romareda</option><option value="García Traid">García Traid</option><option value="Gran Capitán">Gran Capitán</option><option value="J. L. Violeta">J. L. Violeta</option><option value="La Almozara-El Carmen">La Almozara-El Carmen</option><option value="La Azucarera">La Azucarera</option><option value="La Manzanera">La Manzanera</option><option value="La Nueva Camisera">La Nueva Camisera</option><option value="Mariano Estrada Fortún (La Cartuja Baja)">Mariano Estrada Fortún (La Cartuja Baja)</option><option value="Miralbueno">Miralbueno</option><option value="Mudéjar">Mudéjar</option><option value="Nuevo Fleta">Nuevo Fleta</option><option value="Picarral">Picarral</option><option value="Real Zaragoza">Real Zaragoza</option><option value="San Agustín">San Agustín</option><option value="San Gregorio">San Gregorio</option><option value="San Lorenzo">San Lorenzo</option><option value="San Miguel">San Miguel</option><option value="Santa Engracia">Santa Engracia</option><option value="Stadium Casablanca">Stadium Casablanca</option><option value="Torre Ramona-Joaquín González">Torre Ramona-Joaquín González</option><option value="Torrero">Torrero</option><option value="UD San José">UD San José</option><option value="Zaragoza CFF">Zaragoza CFF</option>
+    </select>
+    
+    <span class="label-filtro">📍 Filtrar por Barrio</span>
+    <select id="filtroBarrio" class="select-pro" onchange="filtrarApp()">
+        <option value="todos">Todos los distritos</option>
+        <option value="Actur - Rey Fernando">Actur - Rey Fernando</option><option value="Casablanca">Casablanca</option><option value="Casetas">Casetas</option><option value="Centro">Centro</option><option value="Cuarte">Cuarte</option><option value="Delicias">Delicias</option><option value="El Rabal">El Rabal</option><option value="Garrapinillos">Garrapinillos</option><option value="Juslibol">Juslibol</option><option value="La Almozara">La Almozara</option><option value="La Cartuja Baja">La Cartuja Baja</option><option value="Las Fuentes">Las Fuentes</option><option value="Miralbueno">Miralbueno</option><option value="Montañana">Montañana</option><option value="Monzalbarba">Monzalbarba</option><option value="Movera">Movera</option><option value="Oliver-Valdefierro">Oliver-Valdefierro</option><option value="Otros">Otros</option><option value="Peñaflor">Peñaflor</option><option value="San Gregorio">San Gregorio</option><option value="San José">San José</option><option value="San Juan Mozarrifar">San Juan Mozarrifar</option><option value="Santa Isabel">Santa Isabel</option><option value="Torrero">Torrero</option><option value="Universidad">Universidad</option>
+    </select>
+
+    <button class="btn-gps" onclick="localizarUsuario()">🎯 ENCONTRAR MI UBICACIÓN</button>
+</div>
+
+<script>
+    var datosCampos = [{"id": "marker_5d2b35032a193c6f255efb296124721a", "nombre": "campo municipal de f\u00fatbol torre ramona-joaqu\u00edn gonz\u00e1lez", "club": "torre ramona-joaqu\u00edn gonz\u00e1lez", "club_exacto": "Torre Ramona-Joaqu\u00edn Gonz\u00e1lez", "distrito": "Las Fuentes"}, {"id": "marker_af23edb5a9d9888405bcd4685e75a400", "nombre": "campo municipal de f\u00fatbol la manzanera", "club": "la manzanera", "club_exacto": "La Manzanera", "distrito": "Monzalbarba"}, {"id": "marker_36be5e546fc8686c8a7219f55621026b", "nombre": "campo municipal de f\u00fatbol garc\u00eda traid", "club": "garc\u00eda traid", "club_exacto": "Garc\u00eda Traid", "distrito": "Universidad"}, {"id": "marker_6de6b8b704290c88e36634b0a3486334", "nombre": "campo municipal de f\u00fatbol la almozara-el carmen", "club": "la almozara-el carmen", "club_exacto": "La Almozara-El Carmen", "distrito": "La Almozara"}, {"id": "marker_2ab8341b19c1d1915a69f20418b9a526", "nombre": "campo municipal de f\u00fatbol enrique escuer", "club": "enrique escuer", "club_exacto": "Enrique Escuer", "distrito": "Pe\u00f1aflor"}, {"id": "marker_45d66f303cad282750bd62b28deb2171", "nombre": "campo municipal de f\u00fatbol nuevo fleta", "club": "nuevo fleta", "club_exacto": "Nuevo Fleta", "distrito": "San Jos\u00e9"}, {"id": "marker_33e60d9e26b011fcfb0971c29e887d4f", "nombre": "campo municipal de f\u00fatbol la nueva camisera", "club": "la nueva camisera", "club_exacto": "La Nueva Camisera", "distrito": "Oliver-Valdefierro"}, {"id": "marker_68023f490e9141ac390bca7a4e000578", "nombre": "campo municipal de f\u00fatbol el rabal", "club": "zaragoza cff", "club_exacto": "Zaragoza CFF", "distrito": "El Rabal"}, {"id": "marker_1f2427de7b261b6c12169042a7c2f373", "nombre": "campo municipal de f\u00fatbol san miguel", "club": "san miguel", "club_exacto": "San Miguel", "distrito": "Casetas"}, {"id": "marker_47d03459ca08d9073c957a878bd6d61a", "nombre": "campo municipal de f\u00fatbol mud\u00e9jar", "club": "mud\u00e9jar", "club_exacto": "Mud\u00e9jar", "distrito": "Otros"}, {"id": "marker_bb3740f1509236f2ae16c6aefc2f8216", "nombre": "campo municipal de f\u00fatbol ranillas", "club": "cd ranillas", "club_exacto": "CD Ranillas", "distrito": "Actur - Rey Fernando"}, {"id": "marker_cfc4152628818af39972d0c596fded34", "nombre": "campo municipal de f\u00fatbol san lorenzo", "club": "san lorenzo", "club_exacto": "San Lorenzo", "distrito": "Garrapinillos"}, {"id": "marker_487d2ecf5355ad34a7c2beb4137bbe57", "nombre": "campo municipal de f\u00fatbol c\u00e9sar l\u00e1inez", "club": "c\u00e9sar l\u00e1inez", "club_exacto": "C\u00e9sar L\u00e1inez", "distrito": "Santa Isabel"}, {"id": "marker_9d580b09b41cfec794a895fb2ea6c6d9", "nombre": "campo municipal de f\u00fatbol santa engracia", "club": "santa engracia", "club_exacto": "Santa Engracia", "distrito": "Movera"}, {"id": "marker_44447ca6711c1d30e564ce1c7e0b5066", "nombre": "campo municipal de f\u00fatbol torrero", "club": "torrero", "club_exacto": "Torrero", "distrito": "Torrero"}, {"id": "marker_ac180931e2fa1ee066b321ecaef7a83c", "nombre": "campo municipal de f\u00fatbol miralbueno", "club": "miralbueno", "club_exacto": "Miralbueno", "distrito": "Miralbueno"}, {"id": "marker_5b1e907fada06750578be15c62b1ac7c", "nombre": "campo municipal de f\u00fatbol parque oliver", "club": "cd oliver", "club_exacto": "CD Oliver", "distrito": "Oliver-Valdefierro"}, {"id": "marker_50554f511b7656c78ecb0e803a663309", "nombre": "campo municipal de f\u00fatbol j. l. violeta", "club": "j. l. violeta", "club_exacto": "J. L. Violeta", "distrito": "Torrero"}, {"id": "marker_bb27146a93589ab93e6b423040fa4596", "nombre": "campo municipal de f\u00fatbol san gregorio", "club": "san gregorio", "club_exacto": "San Gregorio", "distrito": "San Gregorio"}, {"id": "marker_90ebd1ee2b7a9a96234c570430df68ca", "nombre": "campo municipal de f\u00fatbol mariano estrada fort\u00fan (la cartuja baja)", "club": "mariano estrada fort\u00fan (la cartuja baja)", "club_exacto": "Mariano Estrada Fort\u00fan (La Cartuja Baja)", "distrito": "La Cartuja Baja"}, {"id": "marker_a3c5fb3f2d1b1f3ca70d0df2dc31c8b8", "nombre": "estadio de f\u00fatbol la romareda", "club": "estadio de f\u00fatbol la romareda", "club_exacto": "Estadio de F\u00fatbol La Romareda", "distrito": "Universidad"}, {"id": "marker_2ec727dc9b7f94f224d0315731df8176", "nombre": "campo municipal de f\u00fatbol valdefierro", "club": "cd valdefierro", "club_exacto": "CD Valdefierro", "distrito": "Oliver-Valdefierro"}, {"id": "marker_9bc3fb19b05d92a5f72341a08ae4ddfb", "nombre": "campo municipal de f\u00fatbol la azucarera", "club": "la azucarera", "club_exacto": "La Azucarera", "distrito": "El Rabal"}, {"id": "marker_57890d993052b972199446b2b72aad4f", "nombre": "campo municipal de f\u00fatbol delicias", "club": "delicias", "club_exacto": "Delicias", "distrito": "Delicias"}, {"id": "marker_98a8c764ac9940c8d83bd7f3c7406da1", "nombre": "campo municipal de f\u00fatbol picarral", "club": "picarral", "club_exacto": "Picarral", "distrito": "El Rabal"}, {"id": "marker_fceeb9da65d8fba1c7b6a09f3fea6eb5", "nombre": "campo municipal de f\u00fatbol actur", "club": "actur", "club_exacto": "Actur", "distrito": "Actur - Rey Fernando"}, {"id": "marker_e888ceb61c44a9642981a05cd9dffb14", "nombre": "campo municipal de f\u00fatbol juslibol", "club": "amistad", "club_exacto": "Amistad", "distrito": "Juslibol"}, {"id": "marker_b251513ec54ca5cafba6c36d5c54003b", "nombre": "campo municipal de f\u00fatbol gran capit\u00e1n", "club": "gran capit\u00e1n", "club_exacto": "Gran Capit\u00e1n", "distrito": "Monta\u00f1ana"}, {"id": "marker_54d4fcb03b99593ff25302f6497e4999", "nombre": "campo municipal de f\u00fatbol el g\u00e1llego", "club": "el g\u00e1llego", "club_exacto": "El G\u00e1llego", "distrito": "San Juan Mozarrifar"}, {"id": "marker_9a746bd0fcbef363bb7b5f2f65ceb6d7", "nombre": "campo municipal de f\u00fatbol san jos\u00e9", "club": "ud san jos\u00e9", "club_exacto": "UD San Jos\u00e9", "distrito": "San Jos\u00e9"}, {"id": "marker_65dd25be1bdf6f623be35095a8064299", "nombre": "colegio san agust\u00edn", "club": "san agust\u00edn", "club_exacto": "San Agust\u00edn", "distrito": "Centro"}, {"id": "marker_b7ecd2375a0c3f3240134d910fae76e3", "nombre": "ciudad deportiva real zaragoza", "club": "real zaragoza", "club_exacto": "Real Zaragoza", "distrito": "Cuarte"}, {"id": "marker_d583b857452e7d1ef5fbf4bde448efc5", "nombre": "estadio miralbueno el olivar", "club": "em el olivar", "club_exacto": "EM El Olivar", "distrito": "Casablanca"}, {"id": "marker_5a9e2af149d4ac58f076fac7f831a11d", "nombre": "stadium casablanca", "club": "stadium casablanca", "club_exacto": "Stadium Casablanca", "distrito": "Casablanca"}];
+    var mapaInstancia = null;
+    var marcadorUsuario = null;
+
+    document.addEventListener("DOMContentLoaded", function() {
+        setTimeout(function() {
+            mapaInstancia = map_2a863a0aff9e434b7e6a5eb94b472f25;
+            actualizarContador(datosCampos.length);
+        }, 300);
+    });
+
+    function actualizarContador(num) {
+        document.getElementById('contadorCampos').innerText = "⚽ " + num + " clubes en el mapa";
+    }
+
+    function filtrarApp() {
+        var consulta = document.getElementById('buscadorGlobal').value.toLowerCase();
+        var clubSeleccionado = document.getElementById('filtroClub').value;
+        var barrioSeleccionado = document.getElementById('filtroBarrio').value;
+        var visibles = 0;
+        
+        datosCampos.forEach(function(campo) {
+            var markerInst = window[campo.id];
+            if (markerInst) {
+                var matchTexto = campo.nombre.includes(consulta) || campo.club.includes(consulta);
+                var matchClub = (clubSeleccionado === 'todos' || campo.club_exacto === clubSeleccionado);
+                var matchBarrio = (barrioSeleccionado === 'todos' || campo.distrito === barrioSeleccionado);
+                
+                if (matchTexto && matchClub && matchBarrio) {
+                    markerInst.addTo(mapaInstancia);
+                    visibles++;
+                } else {
+                    markerInst.remove();
+                }
+            }
+        });
+        actualizarContador(visibles);
+    }
+
+    function localizarUsuario() {
+        if (!navigator.geolocation) { alert("Navegador no compatible."); return; }
+        navigator.geolocation.getCurrentPosition(function(pos) {
+            var lat = pos.coords.latitude; var lon = pos.coords.longitude;
+            if (marcadorUsuario) { marcadorUsuario.remove(); }
+            marcadorUsuario = L.marker([lat, lon]).addTo(mapaInstancia).bindPopup("<b>👋 ¡Estás aquí!</b>").openPopup();
+            mapaInstancia.flyTo([lat, lon], 14);
+        });
+    }
+</script>
+    
+            <div class="folium-map" id="map_2a863a0aff9e434b7e6a5eb94b472f25" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_2a863a0aff9e434b7e6a5eb94b472f25 = L.map(
+                "map_2a863a0aff9e434b7e6a5eb94b472f25",
+                {
+                    center: [41.6488, -0.8891],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 13,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_b31ab15cd83c28c40feff2d5e583659a = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_b31ab15cd83c28c40feff2d5e583659a.addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            L.control.fullscreen(
+                {
+  "position": "topleft",
+  "title": "Ver en pantalla completa",
+  "titleCancel": "Salir de pantalla completa",
+  "forceSeparateButton": false,
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var marker_5d2b35032a193c6f255efb296124721a = L.marker(
+                [41.639674176652456, -0.86196921331345],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_0b7b11fe8a7e20e4ca328a83b292b59b = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_eff4e7cb4156e2abfa38f41fd93b83cd = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_b36dc9144e239a96e155b3a1da19b2ae = $(`<div id="html_b36dc9144e239a96e155b3a1da19b2ae" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">Torre Ramona-Joaquín González</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol Torre Ramona-Joaquín González</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> C/ Fray Luís Urbano, 81</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976 596721</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Las Fuentes</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.639674176652456,-0.86196921331345" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_eff4e7cb4156e2abfa38f41fd93b83cd.setContent(html_b36dc9144e239a96e155b3a1da19b2ae);
+            
+        
+
+        marker_5d2b35032a193c6f255efb296124721a.bindPopup(popup_eff4e7cb4156e2abfa38f41fd93b83cd)
+        ;
+
+        
+    
+    
+                marker_5d2b35032a193c6f255efb296124721a.setIcon(icon_0b7b11fe8a7e20e4ca328a83b292b59b);
+            
+    
+            var marker_af23edb5a9d9888405bcd4685e75a400 = L.marker(
+                [41.70622266777617, -0.9685006821846398],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_435a77e477e19ca84e5a16f6bfd444dd = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_b4c49994599103290f71ce836d1a9fb2 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_793912a690af3aade6fe1f566f48e811 = $(`<div id="html_793912a690af3aade6fe1f566f48e811" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">La Manzanera</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol La Manzanera</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> Camino de La Mejana, 22</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976788727</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Monzalbarba</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.70622266777617,-0.9685006821846398" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_b4c49994599103290f71ce836d1a9fb2.setContent(html_793912a690af3aade6fe1f566f48e811);
+            
+        
+
+        marker_af23edb5a9d9888405bcd4685e75a400.bindPopup(popup_b4c49994599103290f71ce836d1a9fb2)
+        ;
+
+        
+    
+    
+                marker_af23edb5a9d9888405bcd4685e75a400.setIcon(icon_435a77e477e19ca84e5a16f6bfd444dd);
+            
+    
+            var marker_36be5e546fc8686c8a7219f55621026b = L.marker(
+                [41.638072791795445, -0.9123697620062843],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_69fc51b9a8c9b1184cf3e97d32cf928b = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f29498095a7893b26705afbe2ac57f6b = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_3a048e55b848d9ec67ee2eaa26339cf5 = $(`<div id="html_3a048e55b848d9ec67ee2eaa26339cf5" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">García Traid</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol García Traid</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> Andador Teniente General Gutierrez Mellado, 40</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976 754593</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Universidad</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.638072791795445,-0.9123697620062843" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_f29498095a7893b26705afbe2ac57f6b.setContent(html_3a048e55b848d9ec67ee2eaa26339cf5);
+            
+        
+
+        marker_36be5e546fc8686c8a7219f55621026b.bindPopup(popup_f29498095a7893b26705afbe2ac57f6b)
+        ;
+
+        
+    
+    
+                marker_36be5e546fc8686c8a7219f55621026b.setIcon(icon_69fc51b9a8c9b1184cf3e97d32cf928b);
+            
+    
+            var marker_6de6b8b704290c88e36634b0a3486334 = L.marker(
+                [41.661363947212685, -0.8939708401299371],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_62e29bd6bbe121bc482c7aec7a26f24b = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_5a3a001777b3ae62b558648fa46088b1 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_34f4bbc6e2d42cf905d5cb06c649f245 = $(`<div id="html_34f4bbc6e2d42cf905d5cb06c649f245" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">La Almozara-El Carmen</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol La Almozara-El Carmen</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> C/ Sierra de Vicor, 6</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976285826</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">La Almozara</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.661363947212685,-0.8939708401299371" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_5a3a001777b3ae62b558648fa46088b1.setContent(html_34f4bbc6e2d42cf905d5cb06c649f245);
+            
+        
+
+        marker_6de6b8b704290c88e36634b0a3486334.bindPopup(popup_5a3a001777b3ae62b558648fa46088b1)
+        ;
+
+        
+    
+    
+                marker_6de6b8b704290c88e36634b0a3486334.setIcon(icon_62e29bd6bbe121bc482c7aec7a26f24b);
+            
+    
+            var marker_2ab8341b19c1d1915a69f20418b9a526 = L.marker(
+                [41.76482050656641, -0.7880938553710496],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_db4d49e8f367231baa780795717f0588 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_7cdb933854d6ded6d27af7015823eeda = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_08543feb5ce861003845b01f73516c2c = $(`<div id="html_08543feb5ce861003845b01f73516c2c" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">Enrique Escuer</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol Enrique Escuer</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> C/ San Cristóbal, 121</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> No disponible</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Peñaflor</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.76482050656641,-0.7880938553710496" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_7cdb933854d6ded6d27af7015823eeda.setContent(html_08543feb5ce861003845b01f73516c2c);
+            
+        
+
+        marker_2ab8341b19c1d1915a69f20418b9a526.bindPopup(popup_7cdb933854d6ded6d27af7015823eeda)
+        ;
+
+        
+    
+    
+                marker_2ab8341b19c1d1915a69f20418b9a526.setIcon(icon_db4d49e8f367231baa780795717f0588);
+            
+    
+            var marker_45d66f303cad282750bd62b28deb2171 = L.marker(
+                [41.63196929188926, -0.8645375127339853],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_163a476e91811fe54433b4183b39de8e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_c1f8763064f0498d0322bdb2c3652862 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_87c218c6baf02b236fbef8b94246aa2e = $(`<div id="html_87c218c6baf02b236fbef8b94246aa2e" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">Nuevo Fleta</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol Nuevo Fleta</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> Recinto Ferial Avda. Cesáreo Alierta, s/n</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 666 423752</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">San José</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.63196929188926,-0.8645375127339853" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_c1f8763064f0498d0322bdb2c3652862.setContent(html_87c218c6baf02b236fbef8b94246aa2e);
+            
+        
+
+        marker_45d66f303cad282750bd62b28deb2171.bindPopup(popup_c1f8763064f0498d0322bdb2c3652862)
+        ;
+
+        
+    
+    
+                marker_45d66f303cad282750bd62b28deb2171.setIcon(icon_163a476e91811fe54433b4183b39de8e);
+            
+    
+            var marker_33e60d9e26b011fcfb0971c29e887d4f = L.marker(
+                [41.65441676739704, -0.9321357795488421],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_af7f90e092afb63ffb5c7f1bd4ac3e29 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d8ede9d342d4bcf11ef0f812d51da057 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_7c8eb87049822cd18b5d9e4a3fa664b2 = $(`<div id="html_7c8eb87049822cd18b5d9e4a3fa664b2" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">La Nueva Camisera</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol La Nueva Camisera</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> Carrera de la Camisera, s/n</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976324533</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Oliver-Valdefierro</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.65441676739704,-0.9321357795488421" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_d8ede9d342d4bcf11ef0f812d51da057.setContent(html_7c8eb87049822cd18b5d9e4a3fa664b2);
+            
+        
+
+        marker_33e60d9e26b011fcfb0971c29e887d4f.bindPopup(popup_d8ede9d342d4bcf11ef0f812d51da057)
+        ;
+
+        
+    
+    
+                marker_33e60d9e26b011fcfb0971c29e887d4f.setIcon(icon_af7f90e092afb63ffb5c7f1bd4ac3e29);
+            
+    
+            var marker_68023f490e9141ac390bca7a4e000578 = L.marker(
+                [41.65375175129296, -0.8553745987652197],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_5d7f8ada6fe188a353fc092a4e7beec3 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_b9d7c39cb398aa9395678c1286fef8b5 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_de7be06642e879b598b4dd3e87c0f915 = $(`<div id="html_de7be06642e879b598b4dd3e87c0f915" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">Zaragoza CFF</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol El Rabal</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> C/ Jesús Burriel, 21</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976205060</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">El Rabal</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.65375175129296,-0.8553745987652197" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_b9d7c39cb398aa9395678c1286fef8b5.setContent(html_de7be06642e879b598b4dd3e87c0f915);
+            
+        
+
+        marker_68023f490e9141ac390bca7a4e000578.bindPopup(popup_b9d7c39cb398aa9395678c1286fef8b5)
+        ;
+
+        
+    
+    
+                marker_68023f490e9141ac390bca7a4e000578.setIcon(icon_5d7f8ada6fe188a353fc092a4e7beec3);
+            
+    
+            var marker_1f2427de7b261b6c12169042a7c2f373 = L.marker(
+                [41.7176694367734, -1.0341842219854107],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_70d9a3c1cf05744c352f217d8181c782 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_98fb698975b74be843fdd97ca6544c69 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_bec83c6b20b48b41fc5180c6296be518 = $(`<div id="html_bec83c6b20b48b41fc5180c6296be518" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">San Miguel</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol San Miguel</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> Camino Molino del Rey, s/n</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976774778</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Casetas</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.7176694367734,-1.0341842219854107" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_98fb698975b74be843fdd97ca6544c69.setContent(html_bec83c6b20b48b41fc5180c6296be518);
+            
+        
+
+        marker_1f2427de7b261b6c12169042a7c2f373.bindPopup(popup_98fb698975b74be843fdd97ca6544c69)
+        ;
+
+        
+    
+    
+                marker_1f2427de7b261b6c12169042a7c2f373.setIcon(icon_70d9a3c1cf05744c352f217d8181c782);
+            
+    
+            var marker_47d03459ca08d9073c957a878bd6d61a = L.marker(
+                [41.63205563467759, -0.9225164908861413],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_f54eaf3d3dea4e13f04f148b249026c3 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_b12fbe43f8b42630701bd035d749a836 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_3aa2a4ba5c72947c0cc8f95780ee9f79 = $(`<div id="html_3aa2a4ba5c72947c0cc8f95780ee9f79" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">Mudéjar</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol Mudéjar</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> Avda. Gómez Laguna, s/n</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> No disponible</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Otros</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.63205563467759,-0.9225164908861413" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_b12fbe43f8b42630701bd035d749a836.setContent(html_3aa2a4ba5c72947c0cc8f95780ee9f79);
+            
+        
+
+        marker_47d03459ca08d9073c957a878bd6d61a.bindPopup(popup_b12fbe43f8b42630701bd035d749a836)
+        ;
+
+        
+    
+    
+                marker_47d03459ca08d9073c957a878bd6d61a.setIcon(icon_f54eaf3d3dea4e13f04f148b249026c3);
+            
+    
+            var marker_bb3740f1509236f2ae16c6aefc2f8216 = L.marker(
+                [41.667128996752304, -0.8944483433437014],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_01df7e085a030a72776d70691e23d608 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_e24cfb54cc29b5792b1057da84f914b8 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_bceadfb08cadcf2f7ecaf6ab4ec1d2e2 = $(`<div id="html_bceadfb08cadcf2f7ecaf6ab4ec1d2e2" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">CD Ranillas</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol Ranillas</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> C/ Clara Campoamor, 34</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> No disponible</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Actur - Rey Fernando</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.667128996752304,-0.8944483433437014" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_e24cfb54cc29b5792b1057da84f914b8.setContent(html_bceadfb08cadcf2f7ecaf6ab4ec1d2e2);
+            
+        
+
+        marker_bb3740f1509236f2ae16c6aefc2f8216.bindPopup(popup_e24cfb54cc29b5792b1057da84f914b8)
+        ;
+
+        
+    
+    
+                marker_bb3740f1509236f2ae16c6aefc2f8216.setIcon(icon_01df7e085a030a72776d70691e23d608);
+            
+    
+            var marker_cfc4152628818af39972d0c596fded34 = L.marker(
+                [41.68585299152156, -1.032026880635577],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_7b52cf1cfa024e8bf19ae44c5c38bd5d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_3c76ed866b9730c58cd95b1e17fbd5cc = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_3d4c984b2eea0eb689fcbeab77b75858 = $(`<div id="html_3d4c984b2eea0eb689fcbeab77b75858" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">San Lorenzo</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol San Lorenzo</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> Camino Puente Clavería, 32</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 658357888</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Garrapinillos</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.68585299152156,-1.032026880635577" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_3c76ed866b9730c58cd95b1e17fbd5cc.setContent(html_3d4c984b2eea0eb689fcbeab77b75858);
+            
+        
+
+        marker_cfc4152628818af39972d0c596fded34.bindPopup(popup_3c76ed866b9730c58cd95b1e17fbd5cc)
+        ;
+
+        
+    
+    
+                marker_cfc4152628818af39972d0c596fded34.setIcon(icon_7b52cf1cfa024e8bf19ae44c5c38bd5d);
+            
+    
+            var marker_487d2ecf5355ad34a7c2beb4137bbe57 = L.marker(
+                [41.67032217581934, -0.829802810731965],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_9516344fa0bccebd74f0fc5dee3ab9be = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_974b392f4f06e5e682ee884dcd45510a = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_b26c6e4714ac3a17bbb5a3eb7ba1c14b = $(`<div id="html_b26c6e4714ac3a17bbb5a3eb7ba1c14b" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">César Láinez</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol César Láinez</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> C/ La Iglesia, 34</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976 57 22 04</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Santa Isabel</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.67032217581934,-0.829802810731965" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_974b392f4f06e5e682ee884dcd45510a.setContent(html_b26c6e4714ac3a17bbb5a3eb7ba1c14b);
+            
+        
+
+        marker_487d2ecf5355ad34a7c2beb4137bbe57.bindPopup(popup_974b392f4f06e5e682ee884dcd45510a)
+        ;
+
+        
+    
+    
+                marker_487d2ecf5355ad34a7c2beb4137bbe57.setIcon(icon_9516344fa0bccebd74f0fc5dee3ab9be);
+            
+    
+            var marker_9d580b09b41cfec794a895fb2ea6c6d9 = L.marker(
+                [41.641284863718276, -0.809471097990109],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_6b22f1603145775594dea0b005913348 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_873bcc71f3ac29b730aadfe02a6b20b4 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_17007858658f82c1799392e48a22cefa = $(`<div id="html_17007858658f82c1799392e48a22cefa" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">Santa Engracia</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol Santa Engracia</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> Avda. de Movera, 600 dplo</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> No disponible</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Movera</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.641284863718276,-0.809471097990109" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_873bcc71f3ac29b730aadfe02a6b20b4.setContent(html_17007858658f82c1799392e48a22cefa);
+            
+        
+
+        marker_9d580b09b41cfec794a895fb2ea6c6d9.bindPopup(popup_873bcc71f3ac29b730aadfe02a6b20b4)
+        ;
+
+        
+    
+    
+                marker_9d580b09b41cfec794a895fb2ea6c6d9.setIcon(icon_6b22f1603145775594dea0b005913348);
+            
+    
+            var marker_44447ca6711c1d30e564ce1c7e0b5066 = L.marker(
+                [41.624705475378704, -0.8861946019132702],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_2d3f30cbdf94c231aecb448741523988 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_2f87d11560287939b418624ddd3071bc = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_1a7aac60d082ea14251fdbc0c49710a0 = $(`<div id="html_1a7aac60d082ea14251fdbc0c49710a0" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">Torrero</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol Torrero</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> Avda. América, 123</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976 382147</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Torrero</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.624705475378704,-0.8861946019132702" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_2f87d11560287939b418624ddd3071bc.setContent(html_1a7aac60d082ea14251fdbc0c49710a0);
+            
+        
+
+        marker_44447ca6711c1d30e564ce1c7e0b5066.bindPopup(popup_2f87d11560287939b418624ddd3071bc)
+        ;
+
+        
+    
+    
+                marker_44447ca6711c1d30e564ce1c7e0b5066.setIcon(icon_2d3f30cbdf94c231aecb448741523988);
+            
+    
+            var marker_ac180931e2fa1ee066b321ecaef7a83c = L.marker(
+                [41.66075819134195, -0.9396992593467999],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_c88829fadfdff01a219dac747c6badf3 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_3055171f96e1da0046982079b6f9a4cd = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_8fd3203856b43b8339d77271c2e34749 = $(`<div id="html_8fd3203856b43b8339d77271c2e34749" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">Miralbueno</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol Miralbueno</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> C/ Manuel Calvo, 7</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976489772</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Miralbueno</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.66075819134195,-0.9396992593467999" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_3055171f96e1da0046982079b6f9a4cd.setContent(html_8fd3203856b43b8339d77271c2e34749);
+            
+        
+
+        marker_ac180931e2fa1ee066b321ecaef7a83c.bindPopup(popup_3055171f96e1da0046982079b6f9a4cd)
+        ;
+
+        
+    
+    
+                marker_ac180931e2fa1ee066b321ecaef7a83c.setIcon(icon_c88829fadfdff01a219dac747c6badf3);
+            
+    
+            var marker_5b1e907fada06750578be15c62b1ac7c = L.marker(
+                [41.64926720515876, -0.9259724814493546],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_3142afde4b4b65381a2f940464670082 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_17df779083ce76baf16438ee2a017270 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_02770ee6cd3b92a1a96e81141ec97ef4 = $(`<div id="html_02770ee6cd3b92a1a96e81141ec97ef4" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">CD Oliver</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol Parque Oliver</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> C/ Reina Petronila, s/n</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976 311212</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Oliver-Valdefierro</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.64926720515876,-0.9259724814493546" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_17df779083ce76baf16438ee2a017270.setContent(html_02770ee6cd3b92a1a96e81141ec97ef4);
+            
+        
+
+        marker_5b1e907fada06750578be15c62b1ac7c.bindPopup(popup_17df779083ce76baf16438ee2a017270)
+        ;
+
+        
+    
+    
+                marker_5b1e907fada06750578be15c62b1ac7c.setIcon(icon_3142afde4b4b65381a2f940464670082);
+            
+    
+            var marker_50554f511b7656c78ecb0e803a663309 = L.marker(
+                [41.624999875780176, -0.8723869324566038],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_2346625d7e2cd21ce61ed327c0b98cfd = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_9f2ea89cd56a946c7110d925e3b8f8f1 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_f42b26661c618d4229080847c97caf05 = $(`<div id="html_f42b26661c618d4229080847c97caf05" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">J. L. Violeta</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol J. L. Violeta</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> C/ Teniente Coronel León Moyano, 55</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 699878384</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Torrero</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.624999875780176,-0.8723869324566038" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_9f2ea89cd56a946c7110d925e3b8f8f1.setContent(html_f42b26661c618d4229080847c97caf05);
+            
+        
+
+        marker_50554f511b7656c78ecb0e803a663309.bindPopup(popup_9f2ea89cd56a946c7110d925e3b8f8f1)
+        ;
+
+        
+    
+    
+                marker_50554f511b7656c78ecb0e803a663309.setIcon(icon_2346625d7e2cd21ce61ed327c0b98cfd);
+            
+    
+            var marker_bb27146a93589ab93e6b423040fa4596 = L.marker(
+                [41.69356726658765, -0.8664908446601148],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_e5e27287478f3a72c84ae921b802ea5a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_e5486e76ed0f1d7adb9b1c8e5f05272b = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_e545be675ea63aad4b9facdb8121002c = $(`<div id="html_e545be675ea63aad4b9facdb8121002c" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">San Gregorio</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol San Gregorio</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> C/ Cristo Rey, 8</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976 525252</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">San Gregorio</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.69356726658765,-0.8664908446601148" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_e5486e76ed0f1d7adb9b1c8e5f05272b.setContent(html_e545be675ea63aad4b9facdb8121002c);
+            
+        
+
+        marker_bb27146a93589ab93e6b423040fa4596.bindPopup(popup_e5486e76ed0f1d7adb9b1c8e5f05272b)
+        ;
+
+        
+    
+    
+                marker_bb27146a93589ab93e6b423040fa4596.setIcon(icon_e5e27287478f3a72c84ae921b802ea5a);
+            
+    
+            var marker_90ebd1ee2b7a9a96234c570430df68ca = L.marker(
+                [41.60518580244909, -0.8252807935825782],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_b0eb0897c92b812da5b0c0f75a2cfe93 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_5d06584126e0ba6b53179688ceb1e54f = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_e9fc5c38a98e4af37df4674f197c835b = $(`<div id="html_e9fc5c38a98e4af37df4674f197c835b" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">Mariano Estrada Fortún (La Cartuja Baja)</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol Mariano Estrada Fortún (La Cartuja Baja)</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> C/ Autonomía de Aragón, 24</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976 454935</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">La Cartuja Baja</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.60518580244909,-0.8252807935825782" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_5d06584126e0ba6b53179688ceb1e54f.setContent(html_e9fc5c38a98e4af37df4674f197c835b);
+            
+        
+
+        marker_90ebd1ee2b7a9a96234c570430df68ca.bindPopup(popup_5d06584126e0ba6b53179688ceb1e54f)
+        ;
+
+        
+    
+    
+                marker_90ebd1ee2b7a9a96234c570430df68ca.setIcon(icon_b0eb0897c92b812da5b0c0f75a2cfe93);
+            
+    
+            var marker_a3c5fb3f2d1b1f3ca70d0df2dc31c8b8 = L.marker(
+                [41.636475598878995, -0.9018349860911158],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_feac74078741bb83712f4c636dfec319 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_140193bd1d3874c0f57d3f9c35d3e7b9 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_a798425e4151447dabbbbf02002b3b44 = $(`<div id="html_a798425e4151447dabbbbf02002b3b44" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">Estadio de Fútbol La Romareda</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Estadio de Fútbol La Romareda</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> C/ Eduardo Ibarra, 6</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976 567777</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Universidad</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.636475598878995,-0.9018349860911158" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_140193bd1d3874c0f57d3f9c35d3e7b9.setContent(html_a798425e4151447dabbbbf02002b3b44);
+            
+        
+
+        marker_a3c5fb3f2d1b1f3ca70d0df2dc31c8b8.bindPopup(popup_140193bd1d3874c0f57d3f9c35d3e7b9)
+        ;
+
+        
+    
+    
+                marker_a3c5fb3f2d1b1f3ca70d0df2dc31c8b8.setIcon(icon_feac74078741bb83712f4c636dfec319);
+            
+    
+            var marker_2ec727dc9b7f94f224d0315731df8176 = L.marker(
+                [41.63621517330294, -0.9241784823996129],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_67abed5742e415a2f212c253d609dc9f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_23fb720010237cd6410f64bcf2089620 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_635d647024527b269249a8890e24d551 = $(`<div id="html_635d647024527b269249a8890e24d551" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">CD Valdefierro</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol Valdefierro</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> C/ Campillo de Llerena, 1</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976 753688</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Oliver-Valdefierro</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.63621517330294,-0.9241784823996129" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_23fb720010237cd6410f64bcf2089620.setContent(html_635d647024527b269249a8890e24d551);
+            
+        
+
+        marker_2ec727dc9b7f94f224d0315731df8176.bindPopup(popup_23fb720010237cd6410f64bcf2089620)
+        ;
+
+        
+    
+    
+                marker_2ec727dc9b7f94f224d0315731df8176.setIcon(icon_67abed5742e415a2f212c253d609dc9f);
+            
+    
+            var marker_9bc3fb19b05d92a5f72341a08ae4ddfb = L.marker(
+                [41.6658294240246, -0.8681931204828386],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_ee49638368cfc9cf81aa7ebc2412a228 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_17663d5bbf1745563656f73c358c653a = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_aa4e9e1fe5c5370af2b7cbb7fa87ba31 = $(`<div id="html_aa4e9e1fe5c5370af2b7cbb7fa87ba31" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">La Azucarera</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol La Azucarera</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> C/ Marqués de La Cadena, 72</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976 472554</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">El Rabal</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.6658294240246,-0.8681931204828386" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_17663d5bbf1745563656f73c358c653a.setContent(html_aa4e9e1fe5c5370af2b7cbb7fa87ba31);
+            
+        
+
+        marker_9bc3fb19b05d92a5f72341a08ae4ddfb.bindPopup(popup_17663d5bbf1745563656f73c358c653a)
+        ;
+
+        
+    
+    
+                marker_9bc3fb19b05d92a5f72341a08ae4ddfb.setIcon(icon_ee49638368cfc9cf81aa7ebc2412a228);
+            
+    
+            var marker_57890d993052b972199446b2b72aad4f = L.marker(
+                [41.643027972220416, -0.9199133106588845],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_9078e47fc132a1c3990b8b7d08ec77f7 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_11df49bec65512a596b54d4e3e997713 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_f2c555f3b7da4435d9a9a19a73edf2af = $(`<div id="html_f2c555f3b7da4435d9a9a19a73edf2af" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">Delicias</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol Delicias</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> C/ Monasterio Nuestra Señora de los Ángeles, 9</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976914008</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Delicias</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.643027972220416,-0.9199133106588845" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_11df49bec65512a596b54d4e3e997713.setContent(html_f2c555f3b7da4435d9a9a19a73edf2af);
+            
+        
+
+        marker_57890d993052b972199446b2b72aad4f.bindPopup(popup_11df49bec65512a596b54d4e3e997713)
+        ;
+
+        
+    
+    
+                marker_57890d993052b972199446b2b72aad4f.setIcon(icon_9078e47fc132a1c3990b8b7d08ec77f7);
+            
+    
+            var marker_98a8c764ac9940c8d83bd7f3c7406da1 = L.marker(
+                [41.67005527610092, -0.8750940986919264],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_8a27350832b4dab911fa109478d0ddee = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_5f7ce14b2ae3583ea0ae0504f3819459 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_b514de0ac2d1738bbb33a76826e4923d = $(`<div id="html_b514de0ac2d1738bbb33a76826e4923d" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">Picarral</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol Picarral</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> Pº Alberto Casañal Shakery, 2</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976 511101</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">El Rabal</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.67005527610092,-0.8750940986919264" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_5f7ce14b2ae3583ea0ae0504f3819459.setContent(html_b514de0ac2d1738bbb33a76826e4923d);
+            
+        
+
+        marker_98a8c764ac9940c8d83bd7f3c7406da1.bindPopup(popup_5f7ce14b2ae3583ea0ae0504f3819459)
+        ;
+
+        
+    
+    
+                marker_98a8c764ac9940c8d83bd7f3c7406da1.setIcon(icon_8a27350832b4dab911fa109478d0ddee);
+            
+    
+            var marker_fceeb9da65d8fba1c7b6a09f3fea6eb5 = L.marker(
+                [41.676140925172305, -0.8972049548787379],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_b8e89f8dc7d4bdda7ca9d8039ebe184c = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_7d6fabbcd6f392bcb5ed051bc08ae1db = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_848979d909da04fe8d85030b59e577bb = $(`<div id="html_848979d909da04fe8d85030b59e577bb" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">Actur</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol Actur</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> C/ Luis Legaz Lacambra, 46</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976 523856</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Actur - Rey Fernando</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.676140925172305,-0.8972049548787379" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_7d6fabbcd6f392bcb5ed051bc08ae1db.setContent(html_848979d909da04fe8d85030b59e577bb);
+            
+        
+
+        marker_fceeb9da65d8fba1c7b6a09f3fea6eb5.bindPopup(popup_7d6fabbcd6f392bcb5ed051bc08ae1db)
+        ;
+
+        
+    
+    
+                marker_fceeb9da65d8fba1c7b6a09f3fea6eb5.setIcon(icon_b8e89f8dc7d4bdda7ca9d8039ebe184c);
+            
+    
+            var marker_e888ceb61c44a9642981a05cd9dffb14 = L.marker(
+                [41.69116264220487, -0.8915034666544541],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_0f2fccbffb9eabe60d9909689855ba67 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_96f431dce628569eac2cba31ca37e806 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_0a47777f356ffc2f0e77c3421c5c9f4a = $(`<div id="html_0a47777f356ffc2f0e77c3421c5c9f4a" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">Amistad</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol Juslibol</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> C/ Castellar, s/n</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976 513676</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Juslibol</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.69116264220487,-0.8915034666544541" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_96f431dce628569eac2cba31ca37e806.setContent(html_0a47777f356ffc2f0e77c3421c5c9f4a);
+            
+        
+
+        marker_e888ceb61c44a9642981a05cd9dffb14.bindPopup(popup_96f431dce628569eac2cba31ca37e806)
+        ;
+
+        
+    
+    
+                marker_e888ceb61c44a9642981a05cd9dffb14.setIcon(icon_0f2fccbffb9eabe60d9909689855ba67);
+            
+    
+            var marker_b251513ec54ca5cafba6c36d5c54003b = L.marker(
+                [41.698080751663056, -0.8273274957812538],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_0fe7542b08453fd292c04645efb249d2 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_45212d244552040238048025ecc7cba4 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_cadd07afc35caa89a0b2d084071e3c75 = $(`<div id="html_cadd07afc35caa89a0b2d084071e3c75" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">Gran Capitán</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol Gran Capitán</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> Camino Torre de los Ajos, 29</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976 576500</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Montañana</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.698080751663056,-0.8273274957812538" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_45212d244552040238048025ecc7cba4.setContent(html_cadd07afc35caa89a0b2d084071e3c75);
+            
+        
+
+        marker_b251513ec54ca5cafba6c36d5c54003b.bindPopup(popup_45212d244552040238048025ecc7cba4)
+        ;
+
+        
+    
+    
+                marker_b251513ec54ca5cafba6c36d5c54003b.setIcon(icon_0fe7542b08453fd292c04645efb249d2);
+            
+    
+            var marker_54d4fcb03b99593ff25302f6497e4999 = L.marker(
+                [41.70837436674654, -0.832772305054886],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_da323c1172207b9e813b5156117cdf66 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d39059e12e1a503a04ccf9db746b679c = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_93f602818a37edbf5a94a5cd3ba97a56 = $(`<div id="html_93f602818a37edbf5a94a5cd3ba97a56" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">El Gállego</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol El Gállego</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> Ctra. de Cogullada, 246</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976 150397</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">San Juan Mozarrifar</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.70837436674654,-0.832772305054886" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_d39059e12e1a503a04ccf9db746b679c.setContent(html_93f602818a37edbf5a94a5cd3ba97a56);
+            
+        
+
+        marker_54d4fcb03b99593ff25302f6497e4999.bindPopup(popup_d39059e12e1a503a04ccf9db746b679c)
+        ;
+
+        
+    
+    
+                marker_54d4fcb03b99593ff25302f6497e4999.setIcon(icon_da323c1172207b9e813b5156117cdf66);
+            
+    
+            var marker_9a746bd0fcbef363bb7b5f2f65ceb6d7 = L.marker(
+                [41.63360212926984, -0.872201292950796],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_7859ee91b68fec76d8d7dfada4c2377a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_4b527c35ecb6a8241b4f13392894ae49 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_3cc04c872bed50aa431a4be83a3ffd08 = $(`<div id="html_3cc04c872bed50aa431a4be83a3ffd08" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">UD San José</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Campo Municipal de Fútbol San José</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> Camino de Miraflores, 15 dplo</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976 316 103</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">San José</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.63360212926984,-0.872201292950796" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_4b527c35ecb6a8241b4f13392894ae49.setContent(html_3cc04c872bed50aa431a4be83a3ffd08);
+            
+        
+
+        marker_9a746bd0fcbef363bb7b5f2f65ceb6d7.bindPopup(popup_4b527c35ecb6a8241b4f13392894ae49)
+        ;
+
+        
+    
+    
+                marker_9a746bd0fcbef363bb7b5f2f65ceb6d7.setIcon(icon_7859ee91b68fec76d8d7dfada4c2377a);
+            
+    
+            var marker_65dd25be1bdf6f623be35095a8064299 = L.marker(
+                [41.6414, -0.8824],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_b95a7ee1797a7652d68f57bb8faefe44 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_1517917479a166353d73ca140d750f7a = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_d2699214a108af583103161086f60ec6 = $(`<div id="html_d2699214a108af583103161086f60ec6" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">San Agustín</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Colegio San Agustín</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> Camino de las Torres, 79</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976 224 825</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Centro</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.6414,-0.8824" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_1517917479a166353d73ca140d750f7a.setContent(html_d2699214a108af583103161086f60ec6);
+            
+        
+
+        marker_65dd25be1bdf6f623be35095a8064299.bindPopup(popup_1517917479a166353d73ca140d750f7a)
+        ;
+
+        
+    
+    
+                marker_65dd25be1bdf6f623be35095a8064299.setIcon(icon_b95a7ee1797a7652d68f57bb8faefe44);
+            
+    
+            var marker_b7ecd2375a0c3f3240134d910fae76e3 = L.marker(
+                [41.594722, -0.948889],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_56042cd3abe914bbd8af1f23d724b5d3 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d1b3cab39d587087b6c3f0b196258462 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_0aeb84406a40d35ef2a83ae6fd0e9711 = $(`<div id="html_0aeb84406a40d35ef2a83ae6fd0e9711" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">Real Zaragoza</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Ciudad Deportiva Real Zaragoza</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> Carretera de Valencia, KM 8</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976 567 777</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Cuarte</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.594722,-0.948889" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_d1b3cab39d587087b6c3f0b196258462.setContent(html_0aeb84406a40d35ef2a83ae6fd0e9711);
+            
+        
+
+        marker_b7ecd2375a0c3f3240134d910fae76e3.bindPopup(popup_d1b3cab39d587087b6c3f0b196258462)
+        ;
+
+        
+    
+    
+                marker_b7ecd2375a0c3f3240134d910fae76e3.setIcon(icon_56042cd3abe914bbd8af1f23d724b5d3);
+            
+    
+            var marker_d583b857452e7d1ef5fbf4bde448efc5 = L.marker(
+                [41.6278, -0.9162],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_9894dc43c0b07bce553995c50e4bc9f9 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_43d6b75202d6e8f8ecf7c6409fbee894 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_50015eebc077f592a1c3612ec6439735 = $(`<div id="html_50015eebc077f592a1c3612ec6439735" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">EM El Olivar</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Estadio Miralbueno El Olivar</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> Calle Argualas, 50</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976 306 336</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Casablanca</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.6278,-0.9162" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_43d6b75202d6e8f8ecf7c6409fbee894.setContent(html_50015eebc077f592a1c3612ec6439735);
+            
+        
+
+        marker_d583b857452e7d1ef5fbf4bde448efc5.bindPopup(popup_43d6b75202d6e8f8ecf7c6409fbee894)
+        ;
+
+        
+    
+    
+                marker_d583b857452e7d1ef5fbf4bde448efc5.setIcon(icon_9894dc43c0b07bce553995c50e4bc9f9);
+            
+    
+            var marker_5a9e2af149d4ac58f076fac7f831a11d = L.marker(
+                [41.6236953, -0.9089993],
+                {
+}
+            ).addTo(map_2a863a0aff9e434b7e6a5eb94b472f25);
+        
+    
+            var icon_0b38bc2ca6b2c21c6d66473112cbb890 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "soccer-ball",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_4c836abe7eaeef1cf53c97b493e6f11c = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_40229bc7e50ec73ac3e1034dbe899345 = $(`<div id="html_40229bc7e50ec73ac3e1034dbe899345" style="width: 100.0%; height: 100.0%;"><div style="font-family: 'Inter', sans-serif; min-width: 250px; padding: 3px; color: #1e293b;"><div style="text-transform: uppercase; font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1px; margin-bottom: 2px;">Stadium Casablanca</div><h4 style="margin: 0 0 12px 0; color: #0f172a; font-size: 15px; font-weight: 700; line-height: 1.3;">Stadium Casablanca</h4><div style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-bottom: 14px;"><div style="display: flex; align-items: flex-start; gap: 6px;"><span>📍</span> <span><b>Dirección:</b> Vía Ibérica, 69-77</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>📞</span> <span><b>Teléfono:</b> 976 754 100</span></div><div style="display: flex; align-items: center; gap: 6px;"><span>🛡️</span> <span><b>Distrito:</b> <span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Casablanca</span></span></div></div><a href="https://www.google.com/maps/dir/?api=1&destination=41.6236953,-0.9089993" target="_blank" style="display: block; text-align: center; padding: 10px; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 700;">🚀 CÓMO LLEGAR</a></div></div>`)[0];
+                popup_4c836abe7eaeef1cf53c97b493e6f11c.setContent(html_40229bc7e50ec73ac3e1034dbe899345);
+            
+        
+
+        marker_5a9e2af149d4ac58f076fac7f831a11d.bindPopup(popup_4c836abe7eaeef1cf53c97b493e6f11c)
+        ;
+
+        
+    
+    
+                marker_5a9e2af149d4ac58f076fac7f831a11d.setIcon(icon_0b38bc2ca6b2c21c6d66473112cbb890);
+            
+</script>
+</html>
